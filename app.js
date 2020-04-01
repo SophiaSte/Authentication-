@@ -1,5 +1,5 @@
 //jshint esversion:6
-
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -18,10 +18,11 @@ const userSchema = new mongoose.Schema({
   email: String,
   password: String
 });
-//einai default apoto documendation ThisIsOurLittleSecret txaio onoma encryptedFields epilegw to password
+
+//einai default apoto documendation mongoose encryption ThisIsOurLittleSecret txaio onoma encryptedFields epilegw to password
 //an thelw na kryptografisw kai alla pedia encryptedFields: ["password", "email"]
-const secret = "ThisIsOurLittleSecret.";
-userSchema.plugin(encrypt, { secret: secret, encryptedFields: ["password"]});
+//o fakelos env exei mesa oti den thelv na fentai px github kai krivw to v=const secret
+userSchema.plugin(encrypt, { secret: process.env.SECRET, encryptedFields: ["password"]});
 
 
 const User = new mongoose.model("User", userSchema);
