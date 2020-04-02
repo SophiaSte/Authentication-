@@ -4,7 +4,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-const md5 = require('md5');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const app = express();
 
@@ -38,18 +39,22 @@ app.get("/register", function(req, res){
 });
 
 app.post("/register", function(req, res){
-  const newUser = new User({
-    email: req.body.username,
-    password: md5(req.body.password) //md5 kryptografish
+
+  bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+    const newUser = new User({
+      email: req.body.username,
+      password: hash
+    });
+   //apothikeyse ton neo user kai emafnise (render)thn secrets page
+   newUser.save(function(err){
+     if(!err){
+       res.render("secrets");
+     }else{
+       console.log(err);
+     }
+   });
   });
- //apothikeyse ton neo user kai emafnise (render)thn secrets page
- newUser.save(function(err){
-   if(!err){
-     res.render("secrets");
-   }else{
-     console.log(err);
-   }
- });
+
 });
 
 app.post("/login", function(req, res){
