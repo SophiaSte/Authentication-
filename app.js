@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-const encrypt = require("mongoose-encryption");
+const md5 = require('md5');
 
 const app = express();
 
@@ -19,10 +19,7 @@ const userSchema = new mongoose.Schema({
   password: String
 });
 
-//einai default apoto documendation mongoose encryption ThisIsOurLittleSecret txaio onoma encryptedFields epilegw to password
-//an thelw na kryptografisw kai alla pedia encryptedFields: ["password", "email"]
-//o fakelos env exei mesa oti den thelv na fentai px github kai krivw to v=const secret
-userSchema.plugin(encrypt, { secret: process.env.SECRET, encryptedFields: ["password"]});
+
 
 
 const User = new mongoose.model("User", userSchema);
@@ -43,7 +40,7 @@ app.get("/register", function(req, res){
 app.post("/register", function(req, res){
   const newUser = new User({
     email: req.body.username,
-    password: req.body.password
+    password: md5(req.body.password) //md5 kryptografish
   });
  //apothikeyse ton neo user kai emafnise (render)thn secrets page
  newUser.save(function(err){
@@ -57,7 +54,7 @@ app.post("/register", function(req, res){
 
 app.post("/login", function(req, res){
   const username = req.body.username;
-  const password = req.body.password;
+  const password = md5(req.body.password);
   //psakse an uparei to email pou egrapse o user an den uparxei err alliws koita kai to password
   User.findOne({email: username}, function(err, foundUser){
     if(err){

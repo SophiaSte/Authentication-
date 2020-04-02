@@ -9,6 +9,7 @@
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "git": "^0.1.5",
+    "md5": "^2.2.1",
     "mongoose": "^5.9.6",
     "mongoose-encryption": "^2.0.2"
   },
