@@ -59,7 +59,7 @@ app.post("/register", function(req, res){
 
 app.post("/login", function(req, res){
   const username = req.body.username;
-  const password = md5(req.body.password);
+  const password = req.body.password;
   //psakse an uparei to email pou egrapse o user an den uparxei err alliws koita kai to password
   User.findOne({email: username}, function(err, foundUser){
     if(err){
@@ -67,10 +67,11 @@ app.post("/login", function(req, res){
     }else{
       //an uparxei user me auto to email pou egrapsa epano tsekare to password
       if(foundUser){
-        //to ptwto pass einai tis bashs to deuetero auto pou egrapse o xrhsths
-        if(foundUser.password = password){
-          res.render("secrets");
-        }
+        bcrypt.compare(password, foundUser.password, function(err, result) {
+            if(result === true){
+              res.render("secrets");
+            }
+        });
       }
     }
   });
